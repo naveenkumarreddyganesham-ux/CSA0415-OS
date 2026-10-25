@@ -1,0 +1,55 @@
+#include <stdio.h>
+
+struct Employee {
+    int id;
+    char name[30];
+    float salary;
+};
+
+int main() {
+    FILE *fp;
+    struct Employee e;
+    int n, i, pos;
+
+    fp = tmpfile();
+
+    if (fp == NULL) {
+        printf("File creation is not supported by this compiler.\n");
+        return 1;
+    }
+
+    printf("Enter number of employees: ");
+    scanf("%d", &n);
+
+    for (i = 0; i < n; i++) {
+        printf("\nEnter Employee ID: ");
+        scanf("%d", &e.id);
+
+        printf("Enter Employee Name: ");
+        scanf("%29s", e.name);
+
+        printf("Enter Salary: ");
+        scanf("%f", &e.salary);
+
+        fwrite(&e, sizeof(e), 1, fp);
+    }
+
+    printf("\nEnter record number to search: ");
+    scanf("%d", &pos);
+
+    if (pos >= 1 && pos <= n) {
+        fseek(fp, (pos - 1) * sizeof(e), SEEK_SET);
+
+        if (fread(&e, sizeof(e), 1, fp) == 1) {
+            printf("\nEmployee Details:\n");
+            printf("ID: %d\n", e.id);
+            printf("Name: %s\n", e.name);
+            printf("Salary: %.2f\n", e.salary);
+        }
+    } else {
+        printf("Invalid record number\n");
+    }
+
+    fclose(fp);
+    return 0;
+}
